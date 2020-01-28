@@ -22,32 +22,31 @@ window.onload = function () {
         update();
       },
     }
-
+    
     function draw(Faby) {
-      var img = new Image();
-      img.onload = function () {
-        ctx.drawImage(img, Faby.x, Faby.y, 50, 50);
+      var fbImg = new Image();
+      fbImg.onload = function () {
+        ctx.drawImage(fbImg, Faby.x, Faby.y, 150, 150);
       }
-      img.src = "images/flappy.png";
+      fbImg.src = "images/flappy.png";
     }
 
-    document.onkeydown = function (e) {
+    document.onkeyup = function (e) {
       switch (e.keyCode) {
         case 32: Faby.gravity = Faby.gravity * -1;
           console.log('flap', Faby);
           break;
       }
-      updateCanvas();
     }
 
-    var img = new Image();
-    img.src = 'images/bg.png';
+    var bgImg = new Image();
+    bgImg.src = 'images/bg.png';
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
 
     var backgroundImage = {
-      img: img,
+      bgImg: bgImg,
       x: 0,
       speed: -1,
 
@@ -57,11 +56,11 @@ window.onload = function () {
       },
 
       draw: function () {
-        ctx.drawImage(this.img, this.x, 0);
+        ctx.drawImage(this.bgImg, this.x, 0);
         if (this.speed < 0) {
-          ctx.drawImage(this.img, this.x + canvas.width, 0);
+          ctx.drawImage(this.bgImg, this.x + canvas.width, 0);
         } else {
-          ctx.drawImage(this.img, this.x - this.img.width, 0);
+          ctx.drawImage(this.bgImg, this.x - this.img.width, 0);
         }
       },
     };
@@ -69,18 +68,18 @@ window.onload = function () {
 
     function updateCanvas() {
       backgroundImage.move();
-
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       backgroundImage.draw();
+      draw(Faby);
 
       requestAnimationFrame(updateCanvas);
 
-      draw(Faby);
     }
 
     // start calling updateCanvas once the image is loaded
-    img.onload = updateCanvas;
-
+    bgImg.onload = updateCanvas();
+    Faby.onload = updateCanvas();
   }
 
 };
