@@ -5,35 +5,37 @@ window.onload = function () {
 
   function startGame() {
 
-    let Faby = {
-      x: 25,
-      y: 25,
-      width: 10,
-      height: 10,
-      speedX: 10,
-      speedY: 10,
-      gravity: 10,
-      gravitySpeed: 1.1,
-      update: () => {
-        this.x += speedX;
-        this.y += speedY;
-      },
-      newPos: () => {
-        update();
-      },
+    var fabycanvas = document.getElementById('fabyCanvas');
+    var ctxfaby = fabycanvas.getContext('2d');
+
+    class birb {
+      x = 150;
+      y = 150;
+      width = 150;
+      height = 100;
+      speedX = 10;
+      speedY = 10;
+      gravity = 1;
+      gravitySpeed = 1.1;
     }
-    
-    function draw(Faby) {
+
+    draw = (bird) => {
       var fbImg = new Image();
+      fbImg.src = 'images/flappy.png';
       fbImg.onload = function () {
-        ctx.drawImage(fbImg, Faby.x, Faby.y, 150, 150);
+        ctxfaby.drawImage(fbImg, bird.x, bird.y, bird.width, bird.height);
+        if (bird.gravity > 0) {
+          ctxfaby.drawImage(fbImg, bird.x, bird.y - bird.gravity);
+        } else {
+          ctxfaby.drawImage(fbImg, bird.x, bird.y + bird.gravity);
+        }
       }
-      fbImg.src = "images/flappy.png";
-    }
+    };
+
 
     document.onkeyup = function (e) {
       switch (e.keyCode) {
-        case 32: Faby.gravity = Faby.gravity * -1;
+        case 32: faby.gravity = faby.gravity * -1;
           console.log('flap', Faby);
           break;
       }
@@ -65,21 +67,26 @@ window.onload = function () {
       },
     };
 
+    faby = new birb();
 
     function updateCanvas() {
       backgroundImage.move();
-      
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       backgroundImage.draw();
-      draw(Faby);
 
+      
+      ctxfaby.clearRect(0, 0, fabycanvas.width, fabycanvas.height);
+      draw(faby);
+      
       requestAnimationFrame(updateCanvas);
-
     }
+
+    
 
     // start calling updateCanvas once the image is loaded
     bgImg.onload = updateCanvas();
-    Faby.onload = updateCanvas();
+    faby.onload = updateCanvas();
   }
 
 };
