@@ -1,93 +1,150 @@
-window.onload = function () {
-  document.getElementById("start-button").onclick = function () {
+let time;
+
+
+window.onload = function() {
+  document.getElementById("start-button").onclick = function() {
     startGame();
   };
+  
+  let canvas = document.getElementById('canvas');
+  let ctx = canvas.getContext('2d');
 
+  
+  let fabyCanvas = document.getElementById('fabyCanvas');
+  let fabyctx = fabyCanvas.getContext('2d');
+  
+  
+  
+  // ------------------------ STARTS THE GAME ------------------------ //
+  
+  
   function startGame() {
+    
 
-    var fabycanvas = document.getElementById('fabyCanvas');
-    var ctxfaby = fabycanvas.getContext('2d');
-
-    class birb {
-      x = 150;
-      y = 150;
-      width = 150;
-      height = 100;
-      speedX = 10;
-      speedY = 10;
-      gravity = 1;
-      gravitySpeed = 1.1;
+    
+    class Flappy {
+      constructor() {
+        this.x = 200;
+        this.y = 200;
+        this.width = 75;
+        this.height = 50;
+        this.img = new Image();
+        this.img.src = "images/flappy.png";
+      }
+      draw() {
+        
+        fabyctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+      }
+      falling(){
+        this.y -= -1;
+      }
+   
     }
 
-    draw = (bird) => {
-      var fbImg = new Image();
-      fbImg.src = 'images/flappy.png';
-      fbImg.onload = function () {
-        ctxfaby.drawImage(fbImg, bird.x, bird.y, bird.width, bird.height);
-        if (bird.gravity > 0) {
-          ctxfaby.drawImage(fbImg, bird.x, bird.y - bird.gravity);
-        } else {
-          ctxfaby.drawImage(fbImg, bird.x, bird.y + bird.gravity);
-        }
-      }
-    };
+    let faby = new Flappy();
+    
+    // faby.falling();
+      
 
+    
+    
 
-    document.onkeyup = function (e) {
-      switch (e.keyCode) {
-        case 32: faby.gravity = faby.gravity * -1;
-          console.log('flap', Faby);
-          break;
+    function draw(faby) {
+
+      
+      let img2 = new Image();
+      img2.onload = function() { 
+        fabyctx.drawImage(img2, faby.x, faby.y, 50, 50); 
       }
+      img2.src = "images/flappy.png";
+      
     }
+    fabyctx.clearRect(0, 0, fabyCanvas.width, fabyCanvas.height);
 
-    var bgImg = new Image();
-    bgImg.src = 'images/bg.png';
+    draw(faby);
+    
 
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
+    
+    
+    // ------------------------ SCROLLING IMAGE ------------------------ //
 
-    var backgroundImage = {
-      bgImg: bgImg,
+    
+    let img = new Image();
+    img.src = 'images/bg.png';
+    
+    
+    let backgroundImage = {
+      img: img,
       x: 0,
       speed: -1,
-
-      move: function () {
+    
+      move: function() {
         this.x += this.speed;
         this.x %= canvas.width;
       },
-
-      draw: function () {
-        ctx.drawImage(this.bgImg, this.x, 0);
+      
+      draw: function() {
+        ctx.drawImage(this.img, this.x, 0);
         if (this.speed < 0) {
-          ctx.drawImage(this.bgImg, this.x + canvas.width, 0);
+          ctx.drawImage(this.img, this.x + canvas.width, 0);
         } else {
-          ctx.drawImage(this.bgImg, this.x - this.img.width, 0);
+          ctx.drawImage(this.img, this.x - this.img.width, 0);
         }
       },
     };
-
-    faby = new birb();
-
+    
     function updateCanvas() {
       backgroundImage.move();
-
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       backgroundImage.draw();
 
-      
-      ctxfaby.clearRect(0, 0, fabycanvas.width, fabycanvas.height);
-      draw(faby);
-      
       requestAnimationFrame(updateCanvas);
+      
+      
+      draw(faby);
     }
+   
+    
+    // start calling updateCanvas once the image is loaded
+    img.onload = updateCanvas;
+
+
 
     
+    //------------------------ GRAVITY ------------------------ //
+    
+setInterval(gravity, 5);
 
-    // start calling updateCanvas once the image is loaded
-    bgImg.onload = updateCanvas();
-    faby.onload = updateCanvas();
+function gravity(){
+
+  fabyctx.clearRect(0, 0, fabyCanvas.width, fabyCanvas.height);
+
+  faby.y -= -1;
+
+  faby.draw();
+
+}
+    
+document.body.onkeyup = function(e){
+  if(e.keyCode == 32){
+      faby.y += -100;
+      console.log("WORKING")
   }
+}
 
+
+
+
+
+
+
+
+  }
+  
+  
+  
+  
+  
+  
 };
-
