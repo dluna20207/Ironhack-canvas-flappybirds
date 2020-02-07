@@ -126,9 +126,9 @@ function gravity(){
 
 }
     
-document.body.onkeyup = function(e){
+document.body.onkeydown = function(e){
   if(e.keyCode == 32){
-      faby.y += -100;
+      faby.y += -7;
       console.log("WORKING")
   }
 }
